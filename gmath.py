@@ -14,8 +14,8 @@ from display import *
   # doubles (red, green, blue)
 
 AMBIENT = 0
-DIFFUSE = 1
-SPECULAR = 2
+DIFFUSE = 1 #How much light is absorbed
+SPECULAR = 2 # Shinyness
 LOCATION = 0
 COLOR = 1
 SPECULAR_EXP = 4
@@ -104,7 +104,7 @@ def where_pointing(a,b):
     prod = dot_product(a,b)
     if prod == 0:
         return "perpendicular"
-    else if prod > 0:
+    elif prod > 0:
         return "acute"
         #We cannot see this surface so don't render
         #This is also not facing the light vector
@@ -119,7 +119,7 @@ def can_see (a,b):
     prod = dot_product(a,b)
     if prod > 0:
         return False
-    else if prod < 0:
+    elif prod < 0:
         return True
     return True
 
@@ -154,3 +154,11 @@ def calculate_normal(polygons, i):
     N[2] = A[0] * B[1] - A[1] * B[0]
 
     return N
+
+def calculate_discriminant(a,b,c):
+    return (b ** 2) - (4 * a * c)
+
+def quad_form(a,b,c):
+    first = ((-1 * b) - math.sqrt(calculate_discriminant(a,b,c))) / (2 * a)
+    second =  ((-1 * b) + math.sqrt(calculate_discriminant(a,b,c))) / (2 * a)
+    return (first,second)
