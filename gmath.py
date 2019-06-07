@@ -91,12 +91,50 @@ def normalize(vector):
     for i in range(3):
         vector[i] = vector[i] / magnitude
 
+def get_magnitude(vector):
+    return math.sqrt( vector[0] * vector[0] +
+                           vector[1] * vector[1] +
+                           vector[2] * vector[2])
 #Return the dot porduct of a . b
 def dot_product(a, b):
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
 
+#Returns whether the angle is obtuse, acute, or perpendicular for vectors
+def where_pointing(a,b):
+    prod = dot_product(a,b)
+    if prod == 0:
+        return "perpendicular"
+    else if prod > 0:
+        return "acute"
+        #We cannot see this surface so don't render
+        #This is also not facing the light vector
+    else:
+        return "obtuse"
+        #We can see this surface
+        #This is facing the light vector
+        #Now find distance between the light and the object vector to find the lighting
+
+#Use this with light or camera vector and the normal in order to see if a specific face can be seen
+def can_see (a,b):
+    prod = dot_product(a,b)
+    if prod > 0:
+        return False
+    else if prod < 0:
+        return True
+    return True
+
+#Return the angle between two vectors
+def angle_between(a,b):
+    return math.acos(dot_product(normalize(a),normalize(b)))
+
+#Return the length of vector a projected onto vector b
+def proj_length(a,b):
+    return dot_product(a,normalize(b))
+
 #Calculate the surface normal for the triangle whose first
 #point is located at index i in polygons
+#This is generated from using the cross product of vectors of two sides
+#Could reference this to check the signs
 def calculate_normal(polygons, i):
 
     A = [0, 0, 0]
