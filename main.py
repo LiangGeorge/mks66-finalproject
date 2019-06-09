@@ -1,12 +1,13 @@
 #from script import run
-import sys
+import sys, time
 from display import *
 from Sphere import *
 from Vector import *
 from Ray import *
+from Light import *
 from functools import reduce
 
-def getColor(ray, objlst, numBounces):
+def getColor(ray, objlst, lightlst, numBounces):
     if numBounces <= 0:
         return Vector([0,0,0])
     closest = None
@@ -18,9 +19,20 @@ def getColor(ray, objlst, numBounces):
             closestObj = i
     if closest == None:
         return Vector([0,0,0])
-    else:
-        reflectedRay = closestObj.getReflected(ray, ray.pointAtT(closest))
-        return Vector([10,10,10]) + getColor(reflectedRay, objlst, numBounces - 1)
+    hitColor = Vector([0,0,0])
+    intersectPoint = ray.pointAtT(closest)
+    reflectedRay = closestObj.getReflected(ray, intersectPoint)
+    for light in lightlst:
+        rayToLight = Ray(intersectPoint, (light.pos - intersectPoint))
+        distToLight = rayToLight.d.get_mag()
+        for obj in objlst: #Check for object hit
+            dist = obj.isIntersect(rayToLight)
+            if dist != None and dist < distToLight:
+                break
+        else: #Executed if objects are exhausted without break
+            hitColor += light.colorAtDist(rayToLight.d.get_mag())
+        continue
+    return hitColor + getColor(reflectedRay, objlst, lightlst, numBounces - 1)
 
 def scaleColors(screen, newMinComp, newMaxComp = 255):
     maxColorComp = screen[0][0][0] #Max color component ex: [10, 20, 30] -> 30
@@ -58,21 +70,20 @@ vals = []
 
 #Making the center as a vector allows me to use my overloaded operators
 test = Sphere(Vector([250,250,100]),50)
-objlst = [test, Sphere(Vector([50, 50, 30]), 20), Sphere(Vector([330, 250, 100]), 30)]
-# for i in range(50, 70):
-#     startRay = Ray(Vector([i, i, 0]), Vector([0,0,1]))
-#     inters = objlst[1].isIntersect(startRay)
-#     print( inters )
-#     if inters != None:
-#         print( startRay.pointAtT(inters) )
-#         print( objlst[1].getReflected(startRay, startRay.pointAtT(inters) ) )
-#     print('------')
+objlst = [test, Sphere(Vector([50, 50, 30]), 20), Sphere(Vector([330, 250, 100]), 30), Sphere(Vector([250, 500, 100]), 70)]
+lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000])),
+            Light(Vector([250, 190, 100]), Vector([1190, 1580, 2030])),
+            Light(Vector([400, 400, 100]), Vector([25500, 10500, 9700]))]
+# lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000]))]
+# lightlst = [Light(Vector([190, 250, 100]), Vector([119, 158, 203]))]
 
+startTime = time.time()
 for x in range(XRES):
     for y in range(YRES):
         #print(test.isIntersect(z,[250,250,0]))
         firedRay = Ray(Vector([x,y,0]),Vector([0,0,1]))
-        colorVector = getColor(firedRay, objlst, 5)
+        colorVector = getColor(firedRay, objlst, lightlst, 5)
         plot(screen,zbuff,colorVector.direction,x,y,1)
 scaleColors(screen, 10)
+print("%f Seconds Elapsed for Calculation" % (time.time() - startTime))
 display(screen)

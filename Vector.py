@@ -21,10 +21,11 @@ class Vector:
         self.direction[1] /= scalar[1]
         self.direction[2] /= scalar[2]
 
-    def __iadd__(self,scalar):
-        self.direction[0] += scalar[0]
-        self.direction[1] += scalar[1]
-        self.direction[2] += scalar[2]
+    def __iadd__(self,o):
+        self.direction[0] += o.direction[0]
+        self.direction[1] += o.direction[1]
+        self.direction[2] += o.direction[2]
+        return self
 
 
     def __mul__(self,o):
