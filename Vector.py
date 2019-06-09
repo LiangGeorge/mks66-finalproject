@@ -45,11 +45,16 @@ class Vector:
     def get_mag(self):
         return math.sqrt( self.direction[0] * self.direction[0] +
                                self.direction[1] *self.direction[1] +
-                               self.direction[2] * self.direction[2])
+                               self.direction[2] * self.direction[2] )
 
-    def normal(self):
-        inv = 1/get_mag()
+    def normalize(self):
+        inv = 1/self.get_mag()
         self.direction[0] *= inv
         self.direction[1] *= inv
         self.direction[2] *= inv
-        return self.direction
+        return self
+
+    def dot(self, other):
+        a = self.direction
+        b = other.direction
+        return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]

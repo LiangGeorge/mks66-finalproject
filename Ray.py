@@ -6,3 +6,6 @@ class Ray:
 
     def pointAtT(self, t):
         return self.o + (self.d * t)
+
+    def __str__(self):
+        return '[ ' + str(self.o) + ' ' + str(self.d) + ' ]'

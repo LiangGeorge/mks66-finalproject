@@ -24,8 +24,11 @@ test = Sphere(Vector([250,250,0]),50)
 for x in range(501):
     for y in range(501):
         #print(test.isIntersect(z,[250,250,0]))
-        val = test.isIntersect(Ray(Vector([x,y,0]),Vector([0,0,1])))
-        if val != None:
-            print(val)
+        firedRay = Ray(Vector([x,y,0]),Vector([0,0,1]))
+        intersection = test.isIntersect(firedRay)
+        if intersection != None:
+            # print(val)
             plot(screen,zbuff,color,x,y,1)
+            if x == y == 251:
+                print(test.getReflected(firedRay, intersection))
 display(screen)

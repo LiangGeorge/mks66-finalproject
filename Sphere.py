@@ -1,11 +1,34 @@
 from gmath import *
+from Ray import *
+from Vector import *
+
 class Sphere:
 
     def __init__(self,origin,radius):
         self.o = origin
         self.r = radius
 
-    def isIntersect(self,ray):
+    def getReflected(self, ray, point):
+        '''Returns the reflected ray of a ray that hits a given point on the sphere
+        '''
+        # R = 2P - L = 2(N(N dot L))-L
+        # L = incoming * -1
+        # R = reflected
+        # N = normal
+        normal = self.getNormal(point)
+        incoming = ray.d.normalize() * -1 #Incoming ray direction
+        p = normal * normal.dot(incoming)
+        reflected = (p * 2) - incoming #Reflected direction vector
+        return Ray(point, reflected)
+
+
+    def getNormal(self, point):
+        '''Assumes that the point vector is on the sphere
+           Returns a normalized vector
+        '''
+        return (self.o - point).normalize()
+
+    def isIntersect(self, ray):
         origin = ray.o
         direction = ray.d
 
@@ -26,7 +49,9 @@ class Sphere:
             return None
 
         roots = quad_form(a,b,c)
-        root = roots[0] if roots[0] < roots[1] else roots[1]
+        if roots[0] < 0 and roots[1] < 0:
+            return None
+        root = roots[0] if roots[0] < roots[1] and roots[0] >=0 else roots[1]
 
         intpoint = ray.pointAtT(root)
         return intpoint
