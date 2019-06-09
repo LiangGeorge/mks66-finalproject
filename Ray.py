@@ -3,3 +3,6 @@ class Ray:
         #These should be vectors just for ease
         self.o = origin
         self.d = direction
+
+    def pointAtT(self, t):
+        return self.o + (self.d * t)

@@ -1,5 +1,6 @@
 import math
 from display import *
+from Vector import *
 
 
   # IMPORANT NOTE
@@ -97,6 +98,10 @@ def get_magnitude(vector):
                            vector[2] * vector[2])
 #Return the dot porduct of a . b
 def dot_product(a, b):
+# if type(a) == Vector:
+    a = a.direction
+# if type(b) == Vector:
+    b = b.direction
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
 
 #Returns whether the angle is obtuse, acute, or perpendicular for vectors

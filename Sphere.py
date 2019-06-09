@@ -5,8 +5,32 @@ class Sphere:
         self.o = origin
         self.r = radius
 
-    def isIntersect(self,avector,avectoro):
-        pass
+    def isIntersect(self,ray):
+        origin = ray.o
+        direction = ray.d
+
+        #ray = origin + dir * t
+
+        #0 = ax^2 + bx + c
+        #a = dot_product(dir, dir)
+        #b = 2 * ( dot_product(dir, rayOrg - circleCenter) )
+        #c = dot_product(rayOrg - center, rayOrg - center) - radius^2
+
+        a = dot_product(direction, direction)
+        b = 2 * ( dot_product(direction, origin - self.o) )
+        c = dot_product(origin - self.o, origin - self.o) - (self.r ** 2)
+
+        discriminant = calculate_discriminant(a,b,c)
+
+        if discriminant < 0:
+            return None
+
+        roots = quad_form(a,b,c)
+        root = roots[0] if roots[0] < roots[1] else roots[1]
+
+        intpoint = ray.pointAtT(root)
+        return intpoint
+
     '''
         print(avectoro.direction)
         diffo = avectoro - self.o

@@ -28,16 +28,19 @@ class Vector:
 
 
     def __mul__(self,o):
-        return [self.direction[0] * o,self.direction[1] * o,self.direction[2] * o]
+        return Vector([self.direction[0] * o,self.direction[1] * o,self.direction[2] * o])
     #dividing two vectors
     def __truediv__(self,o):
-        return [self.direction[0] / o.direction[0],self.direction[1] / o.direction[1],self.direction[2] / o.direction[2]]
+        return Vector([self.direction[0] / o.direction[0],self.direction[1] / o.direction[1],self.direction[2] / o.direction[2]])
 
     def __add__(self,o):
-        return [self.direction[0] + o[0],self.direction[1] + o[1],self.direction[2] + o[2]]
+        return Vector([self.direction[0] + o.direction[0],self.direction[1] + o.direction[1],self.direction[2] + o.direction[2]])
 
     def __sub__(self,o):
-        return [self.direction[0] - o.direction[0],self.direction[1] - o.direction[1],self.direction[2] - o.direction[2]]
+        return Vector([self.direction[0] - o.direction[0],self.direction[1] - o.direction[1],self.direction[2] - o.direction[2]])
+
+    def __str__(self):
+        return '<' + ','.join(str(x) for x in self.direction) + '>'
 
     def get_mag(self):
         return math.sqrt( self.direction[0] * self.direction[0] +
