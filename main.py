@@ -30,7 +30,9 @@ def getColor(ray, objlst, lightlst, numBounces):
             if dist != None and dist < distToLight:
                 break
         else: #Executed if objects are exhausted without break
-            hitColor += light.colorAtDist(rayToLight.d.get_mag())
+            #Phong model
+            normal = closestObj.getNormal(intersectPoint)
+            hitColor += light.calculateColor(distToLight, rayToLight, normal, ray.d)
         continue
     return hitColor + getColor(reflectedRay, objlst, lightlst, numBounces - 1)
 
@@ -49,8 +51,6 @@ def scaleColors(screen, newMinComp, newMaxComp = 255):
     scalar = float(newMaxComp) / (colorCompMinMax[0] - colorCompMinMax[1])
     for y in range(YRES):
         for x in range(XRES):
-            if y == x == 10:
-                print([c * scalar + newMinComp for c in screen[y][x]])
             screen[y][x] = [int(c * scalar + newMinComp) for c in screen[y][x]]
 
 
@@ -73,7 +73,8 @@ test = Sphere(Vector([250,250,100]),50)
 objlst = [test, Sphere(Vector([50, 50, 30]), 20), Sphere(Vector([330, 250, 100]), 30), Sphere(Vector([250, 500, 100]), 70)]
 lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000])),
             Light(Vector([250, 190, 100]), Vector([1190, 1580, 2030])),
-            Light(Vector([400, 400, 100]), Vector([25500, 10500, 9700]))]
+            Light(Vector([400, 400, 100]), Vector([25500, 10500, 9700])),
+            Light(Vector([750, -250, 100]), Vector([1190000, 2210000, 1190000]))]
 # lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000]))]
 # lightlst = [Light(Vector([190, 250, 100]), Vector([119, 158, 203]))]
 
@@ -84,6 +85,7 @@ for x in range(XRES):
         firedRay = Ray(Vector([x,y,0]),Vector([0,0,1]))
         colorVector = getColor(firedRay, objlst, lightlst, 5)
         plot(screen,zbuff,colorVector.direction,x,y,1)
-scaleColors(screen, 10)
+scaleColors(screen, 0)
 print("%f Seconds Elapsed for Calculation" % (time.time() - startTime))
 display(screen)
+save_extension(screen, 'pic')
