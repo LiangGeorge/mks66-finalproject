@@ -55,6 +55,12 @@ class Vector:
         self.direction[2] *= inv
         return self
 
+    def multCompenents(self, other):
+        self.direction[0] *= other.direction[0]
+        self.direction[1] *= other.direction[1]
+        self.direction[2] *= other.direction[2]
+        return self
+
     def dot(self, other):
         a = self.direction
         b = other.direction

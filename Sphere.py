@@ -4,9 +4,11 @@ from Vector import *
 
 class Sphere:
 
-    def __init__(self,origin,radius):
+    def __init__(self,origin,radius,specCons = 1, diffCons = 1):
         self.o = origin
         self.r = radius
+        self.specCons = specCons
+        self.diffCons = diffCons
 
     def __str__(self):
         return 'Center: ' + str(self.o) + ' Radius: ' + str(self.r)

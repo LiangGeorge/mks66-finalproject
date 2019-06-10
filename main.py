@@ -74,7 +74,7 @@ objlst = [test, Sphere(Vector([50, 50, 30]), 20), Sphere(Vector([330, 250, 100])
 lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000])),
             Light(Vector([250, 190, 100]), Vector([1190, 1580, 2030])),
             Light(Vector([400, 400, 100]), Vector([25500, 10500, 9700])),
-            Light(Vector([750, -250, 100]), Vector([1190000, 2210000, 1190000]))]
+            Light(Vector([750, -250, 100]), Vector([2550000, 2550000, 2550000]))]
 # lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000]))]
 # lightlst = [Light(Vector([190, 250, 100]), Vector([119, 158, 203]))]
 

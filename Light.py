@@ -15,6 +15,7 @@ class Light:
     def calculateColor(self, dist, rayToLight, normal, viewVector):
         '''Returns the color of a given point
         '''
+        # Specular ---------------------
         # R = 2P - L = 2(N(N dot L))-L
         # L = incoming
         # R = reflected
@@ -23,4 +24,9 @@ class Light:
         incoming = rayToLight.d.normalize() #Incoming ray direction
         p = normal * normal.dot(incoming)
         reflected = (p * 2) - incoming #Reflected direction vector
-        return intensity * ( (reflected.dot(viewVector)) ** SPECULAR_EXP )
+        specular = intensity * ( (reflected.dot(viewVector)) ** SPECULAR_EXP )
+
+        # Diffuse ---------------------
+        diffuse = intensity * normal.dot(incoming)
+
+        return specular + diffuse
