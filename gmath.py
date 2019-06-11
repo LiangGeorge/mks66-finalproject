@@ -140,6 +140,16 @@ def proj_length(a,b):
 #point is located at index i in polygons
 #This is generated from using the cross product of vectors of two sides
 #Could reference this to check the signs
+def calculate_cross_area(A,B):
+    N = [0, 0, 0]
+
+    N[0] = A[1] * B[2] - A[2] * B[1]
+    N[1] = A[2] * B[0] - A[0] * B[2]
+    N[2] = A[0] * B[1] - A[1] * B[0]
+    magnitude = math.sqrt( N[0] * N[0] +
+                           N[1] * N[1] +
+                           N[2] * N[2])
+    return abs(magnitude)
 def calculate_normal(polygons, i):
 
     A = [0, 0, 0]
@@ -162,6 +172,10 @@ def calculate_normal(polygons, i):
 
 def calculate_discriminant(a,b,c):
     return (b ** 2) - (4 * a * c)
+
+def distance_formula(a,b):
+    d = math.sqrt(((b[0] - a[0]) ** 2) + ((b[1] - a[1]) ** 2) + ((b[2] - a[2])**2))
+    return d
 
 def quad_form(a,b,c):
     first = ((-1 * b) - math.sqrt(calculate_discriminant(a,b,c))) / (2 * a)

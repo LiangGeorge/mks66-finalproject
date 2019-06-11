@@ -6,7 +6,7 @@ from Vector import *
 from Ray import *
 from Light import *
 from functools import reduce
-
+from Triangle import *
 def getColor(ray, objlst, lightlst, numBounces):
     if numBounces <= 0:
         return Vector([0,0,0])
@@ -77,14 +77,22 @@ lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000])),
             Light(Vector([750, -250, 100]), Vector([2550000, 2550000, 2550000]))]
 # lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000]))]
 # lightlst = [Light(Vector([190, 250, 100]), Vector([119, 158, 203]))]
+test0 = Triangle(Vector([100,500,100]),Vector([200,200,100]),Vector([150,150,100]))
 
 startTime = time.time()
 for x in range(XRES):
     for y in range(YRES):
         #print(test.isIntersect(z,[250,250,0]))
         firedRay = Ray(Vector([x,y,0]),Vector([0,0,1]))
+        #print(test0.isIntersect(firedRay))
+        if test0.isIntersect(firedRay):
+            #print("hit")
+            plot(screen,zbuff,color,x,y,1)
+        ''' Testing Some of my stuff IMPORTANT UNCOMMENT THIS PLZ
         colorVector = getColor(firedRay, objlst, lightlst, 5)
         plot(screen,zbuff,colorVector.direction,x,y,1)
+        '''
+
 scaleColors(screen, 0)
 print("%f Seconds Elapsed for Calculation" % (time.time() - startTime))
 display(screen)

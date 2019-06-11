@@ -9,3 +9,5 @@ class Ray:
 
     def __str__(self):
         return '[ ' + str(self.o) + ' ' + str(self.d) + ' ]'
+
+#Ray and Triangle Intersection involves intersecting the plane of the triangle and then checking if the intersection point is within triangle
