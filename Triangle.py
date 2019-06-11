@@ -45,13 +45,14 @@ class Triangle:
             gamma = calculate_cross_area((point - self.p0).direction,(point - self.p1).direction)/ (Area * 2)
 
             #print(alpha + beta + gamma)
-            
+            '''
             if (alpha >= 0 and alpha <= 1):
                 print(alpha)
             if (beta >= 0 and beta <= 1):
                 print(beta)
             if (gamma >= 0 and gamma <= 1):
                 print(gamma)
+            '''
 
 
             if (alpha >= 0 and alpha <= 1) and (beta >= 0 and beta <= 1) and (gamma >= 0 and gamma <= 1) and (alpha + beta + gamma <= 1) :

@@ -126,7 +126,7 @@ def can_see (a,b):
         return False
     elif prod < 0:
         return True
-    return True
+    return False
 
 #Return the angle between two vectors
 def angle_between(a,b):

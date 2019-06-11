@@ -85,6 +85,7 @@ add_box(temp,100,200,100,20,20,20)
 triangles = []
 for x in range(len(temp) - 2):
     triangles.append(Triangle(Vector(temp[x]),Vector(temp[x + 1]),Vector(temp[x + 2])))
+
 startTime = time.time()
 for x in range(XRES):
     for y in range(YRES):
@@ -105,7 +106,6 @@ for x in range(XRES):
         colorVector = getColor(firedRay, objlst, lightlst, 5)
         plot(screen,zbuff,colorVector.direction,x,y,1)
         '''
-
 scaleColors(screen, 0)
 print("%f Seconds Elapsed for Calculation" % (time.time() - startTime))
 display(screen)
