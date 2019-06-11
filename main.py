@@ -81,7 +81,13 @@ lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000])),
 test0 = Triangle(Vector([100,300,100]),Vector([200,300,100]),Vector([150,450,100]))
 temp = []
 #add_torus(temp,250,250,100,25,150,50)
-add_box(temp,100,200,100,20,20,20)
+add_box(temp,100,350,100,100,100,100)
+tmp = new_matrix()
+ident(tmp)
+matrix_mult(make_rotX(30),tmp)
+matrix_mult(make_rotY(-20), tmp)
+matrix_mult(tmp,temp)
+
 triangles = []
 for x in range(len(temp) - 2):
     triangles.append(Triangle(Vector(temp[x]),Vector(temp[x + 1]),Vector(temp[x + 2])))

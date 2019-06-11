@@ -65,3 +65,9 @@ class Vector:
         a = self.direction
         b = other.direction
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+
+    def cross(self, other):
+        x = (self.direction[1] * other.direction[2]) - (self.direction[2] * other.direction[1])
+        y = (self.direction[2] * other.direction[0]) - (self.direction[0] * other.direction[2])
+        z = (self.direction[0] * other.direction[1]) - (self.direction[1] * other.direction[0])
+        return Vector([x,y,z])
