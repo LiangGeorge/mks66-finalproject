@@ -7,6 +7,7 @@ from Ray import *
 from Light import *
 from functools import reduce
 from Triangle import *
+from draw import *
 def getColor(ray, objlst, lightlst, numBounces):
     if numBounces <= 0:
         return Vector([0,0,0])
@@ -78,16 +79,28 @@ lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000])),
 # lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000]))]
 # lightlst = [Light(Vector([190, 250, 100]), Vector([119, 158, 203]))]
 test0 = Triangle(Vector([100,300,100]),Vector([200,300,100]),Vector([150,450,100]))
-
+temp = []
+#add_torus(temp,250,250,100,25,150,50)
+add_box(temp,100,200,100,20,20,20)
+triangles = []
+for x in range(len(temp) - 2):
+    triangles.append(Triangle(Vector(temp[x]),Vector(temp[x + 1]),Vector(temp[x + 2])))
 startTime = time.time()
 for x in range(XRES):
     for y in range(YRES):
         #print(test.isIntersect(z,[250,250,0]))
         firedRay = Ray(Vector([x,y,0]),Vector([0,0,1]))
         #print(test0.isIntersect(firedRay))
+        for obj in triangles:
+            if obj.isIntersect(firedRay):
+                plot(screen,zbuff,color,x,y,1)
+
+        ''' Triangle Test
         if test0.isIntersect(firedRay):
             #print("hit")
             plot(screen,zbuff,color,x,y,1)
+        '''
+
         ''' Testing Some of my stuff IMPORTANT UNCOMMENT THIS PLZ
         colorVector = getColor(firedRay, objlst, lightlst, 5)
         plot(screen,zbuff,colorVector.direction,x,y,1)
