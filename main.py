@@ -77,7 +77,7 @@ lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000])),
             Light(Vector([750, -250, 100]), Vector([2550000, 2550000, 2550000]))]
 # lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000]))]
 # lightlst = [Light(Vector([190, 250, 100]), Vector([119, 158, 203]))]
-test0 = Triangle(Vector([100,500,100]),Vector([200,200,100]),Vector([150,150,100]))
+test0 = Triangle(Vector([100,300,100]),Vector([200,300,100]),Vector([150,450,100]))
 
 startTime = time.time()
 for x in range(XRES):
