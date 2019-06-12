@@ -1,4 +1,10 @@
 from gmath import SPECULAR_EXP
+from Vector import *
+
+DEFAULT_CONS = ['constants',
+                     {'red': [0.2, 0.5, 0.5],
+                      'green': [0.2, 0.5, 0.5],
+                      'blue': [0.2, 0.5, 0.5]}]
 
 class Light:
 
@@ -12,7 +18,7 @@ class Light:
             return self.color
         return self.color * (dist ** -2)
 
-    def calculateColor(self, dist, rayToLight, normal, viewVector):
+    def calculateColor(self, dist, rayToLight, normal, viewVector, constants):
         '''Returns the color of a given point
         '''
         # Specular ---------------------
@@ -20,13 +26,20 @@ class Light:
         # L = incoming
         # R = reflected
         # N = normal
+
+        red = constants[1]['red']
+        green = constants[1]['green']
+        blue = constants[1]['blue']
+
+        specCons = Vector([red[2], green[2], blue[2]])
         intensity = self.colorAtDist(dist)
         incoming = rayToLight.d.normalize() #Incoming ray direction
         p = normal * normal.dot(incoming)
         reflected = (p * 2) - incoming #Reflected direction vector
-        specular = intensity * ( (reflected.dot(viewVector)) ** SPECULAR_EXP )
+        specular = (intensity * ( (reflected.dot(viewVector)) ** SPECULAR_EXP )).multComponents(specCons)
 
         # Diffuse ---------------------
-        diffuse = intensity * normal.dot(incoming)
+        diffCons = Vector([red[1], green[1], blue[1]])
+        diffuse = (intensity * normal.dot(incoming)).multComponents(diffCons)
 
         return specular + diffuse

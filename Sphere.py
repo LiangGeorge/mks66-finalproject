@@ -1,14 +1,14 @@
 from gmath import *
 from Ray import *
 from Vector import *
+from Light import DEFAULT_CONS
 
 class Sphere:
 
-    def __init__(self,origin,radius,specCons = 1, diffCons = 1):
+    def __init__(self,origin,radius,constants = DEFAULT_CONS):
         self.o = origin
         self.r = radius
-        self.specCons = specCons
-        self.diffCons = diffCons
+        self.cons = constants
 
     def __str__(self):
         return 'Center: ' + str(self.o) + ' Radius: ' + str(self.r)

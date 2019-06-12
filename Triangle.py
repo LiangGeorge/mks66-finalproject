@@ -1,15 +1,18 @@
 from gmath import *
 import math
 from Vector import *
+from Light import DEFAULT_CONS
+
 class Triangle:
-    def __init__(self,p0,p1,p2):
+    def __init__(self, p0, p1, p2, constants = DEFAULT_CONS):
 
         #Hand these vectors in order to use overloaded operators
         self.p0 = p0
         self.p1 = p1
         self.p2 = p2
+        self.cons = constants
 
-    def get_normal(self):
+    def getNormal(self):
         temp = []
         temp.append(self.p0.direction)
         temp.append(self.p1.direction)

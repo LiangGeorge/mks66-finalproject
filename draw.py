@@ -1,8 +1,7 @@
 from display import *
 from matrix import *
 from gmath import *
-from Vector import *
-from Sphere import *
+
 def draw_scanline(x0, z0, x1, z1, y, screen, zbuffer, color):
     if x0 > x1:
         tx = x0
@@ -145,8 +144,6 @@ def add_box( polygons, x, y, z, width, height, depth ):
     add_polygon(polygons, x, y1, z, x, y1, z1, x1, y1, z1)
 
 def add_sphere(polygons, cx, cy, cz, r, step ):
-    polygons.append(Sphere(Vector([cx,cy,cz]),r)) 
-    '''
     points = generate_sphere(cx, cy, cz, r, step)
 
     lat_start = 0
@@ -183,7 +180,6 @@ def add_sphere(polygons, cx, cy, cz, r, step ):
                              points[p3][0],
                              points[p3][1],
                              points[p3][2])
-    '''
 
 
 def generate_sphere( cx, cy, cz, r, step ):

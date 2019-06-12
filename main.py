@@ -23,6 +23,8 @@ def getColor(ray, objlst, lightlst, numBounces):
     hitColor = Vector([0,0,0])
     intersectPoint = ray.pointAtT(closest)
     reflectedRay = closestObj.getReflected(ray, intersectPoint)
+    #Make successive bounces less important based on spectral constants
+    colorDecay = Vector([closestObj.cons[1]['red'][2], closestObj.cons[1]['green'][2], closestObj.cons[1]['blue'][2]])
     for light in lightlst:
         rayToLight = Ray(intersectPoint, (light.pos - intersectPoint))
         distToLight = rayToLight.d.get_mag()
@@ -33,9 +35,9 @@ def getColor(ray, objlst, lightlst, numBounces):
         else: #Executed if objects are exhausted without break
             #Phong model
             normal = closestObj.getNormal(intersectPoint)
-            hitColor += light.calculateColor(distToLight, rayToLight, normal, ray.d)
+            hitColor += light.calculateColor(distToLight, rayToLight, normal, ray.d, closestObj.cons)
         continue
-    return hitColor + getColor(reflectedRay, objlst, lightlst, numBounces - 1)
+    return (hitColor + getColor(reflectedRay, objlst, lightlst, numBounces - 1).multComponents(colorDecay))
 
 def scaleColors(screen, newMinComp, newMaxComp = 255):
     maxColorComp = screen[0][0][0] #Max color component ex: [10, 20, 30] -> 30
@@ -81,12 +83,12 @@ lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000])),
 test0 = Triangle(Vector([100,300,100]),Vector([200,300,100]),Vector([150,450,100]))
 temp = []
 #add_torus(temp,250,250,100,25,150,50)
-add_box(temp,100,350,100,100,100,100)
-tmp = new_matrix()
-ident(tmp)
-matrix_mult(make_rotX(30),tmp)
-matrix_mult(make_rotY(-20), tmp)
-matrix_mult(tmp,temp)
+# add_box(temp,100,350,100,100,100,100)
+# tmp = new_matrix()
+# ident(tmp)
+# matrix_mult(make_rotX(30),tmp)
+# matrix_mult(make_rotY(-20), tmp)
+# matrix_mult(tmp,temp)
 
 triangles = []
 for x in range(len(temp) - 2):
@@ -98,9 +100,11 @@ for x in range(XRES):
         #print(test.isIntersect(z,[250,250,0]))
         firedRay = Ray(Vector([x,y,0]),Vector([0,0,1]))
         #print(test0.isIntersect(firedRay))
-        for obj in triangles:
-            if obj.isIntersect(firedRay):
-                plot(screen,zbuff,color,x,y,1)
+        # for obj in objlst:
+        #     if obj.isIntersect(firedRay):
+        #         plot(screen,zbuff,color,x,y,1)
+        colorVector = getColor(firedRay, objlst, lightlst, 5)
+        plot(screen,zbuff,colorVector.direction,x,y,1)
 
         ''' Triangle Test
         if test0.isIntersect(firedRay):
@@ -115,4 +119,4 @@ for x in range(XRES):
 scaleColors(screen, 0)
 print("%f Seconds Elapsed for Calculation" % (time.time() - startTime))
 display(screen)
-save_extension(screen, 'pic')
+save_extension(screen, 'pic2')
