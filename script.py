@@ -135,7 +135,6 @@ def run(filename):
             knob_value = 1
             if 'knob' in command and command['knob'] != None and command['knob'] in frames[frame]:
                 knob_value = frames[frame][command['knob']]
-
             if c == 'box':
                 if command['constants']:
                     reflect = command['constants']
@@ -152,7 +151,7 @@ def run(filename):
                 add_sphere(tmp,
                            args[0], args[1], args[2], args[3], step_3d)
                 matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+               # draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
             elif c == 'torus':
