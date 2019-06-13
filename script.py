@@ -164,6 +164,7 @@ def run(filename):
                     reflect = command['constants']
                 add_sphere(tmp,
                            args[0], args[1], args[2], args[3], step_3d)
+                tmp[-1].applyMatrix(stack[-1])
                 #print(type(tmp[len(tmp)-1].o))
                 #print(tmp[len(tmp)-1].o)
                 #matrix_mult( stack[-1], tmp[len(tmp)-1].o.direction)

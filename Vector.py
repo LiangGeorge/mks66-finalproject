@@ -14,8 +14,7 @@ class Vector:
         return
 
     def applyMatrix(self, matrix):
-        matrix_mult(matrix, self.direction)
-        self.direction.pop()
+        matrix_mult(matrix, [self.direction])
 
     #Scaling our vector
     def scaleup(self,scalar):
