@@ -109,28 +109,56 @@ startTime = time.time()
 # refl = triangles[0].getReflected(firedRay, firedRay.pointAtT(t))
 # print(firedRay)
 # print(refl)
+def drawNoPerspective():
+    for x in range(XRES):
+        for y in range(YRES):
+            #print(test.isIntersect(z,[250,250,0]))
+            firedRay = Ray(Vector([x,y,0]),Vector([0,0,1]))
+            #print(test0.isIntersect(firedRay))
+            # for obj in objlst:
+            #     if obj.isIntersect(firedRay):
+            #         plot(screen,zbuff,color,x,y,1)
+            colorVector = getColor(firedRay, objlst, lightlst, 5)
+            plot(screen,zbuff,colorVector.direction,x,y,1)
+    #
+    #         ''' Triangle Test
+    #         if test0.isIntersect(firedRay):
+    #             #print("hit")
+    #             plot(screen,zbuff,color,x,y,1)
+    #         '''
+    #
+    #         ''' Testing Some of my stuff IMPORTANT UNCOMMENT THIS PLZ
+    #         colorVector = getColor(firedRay, objlst, lightlst, 5)
+    #         plot(screen,zbuff,colorVector.direction,x,y,1)
+    #         '''
 
-for x in range(XRES):
-    for y in range(YRES):
-        #print(test.isIntersect(z,[250,250,0]))
-        firedRay = Ray(Vector([x,y,0]),Vector([0,0,1]))
-        #print(test0.isIntersect(firedRay))
-        # for obj in objlst:
-        #     if obj.isIntersect(firedRay):
-        #         plot(screen,zbuff,color,x,y,1)
-        colorVector = getColor(firedRay, triangles, lightlst, 5)
-        plot(screen,zbuff,colorVector.direction,x,y,1)
-#
-#         ''' Triangle Test
-#         if test0.isIntersect(firedRay):
-#             #print("hit")
-#             plot(screen,zbuff,color,x,y,1)
-#         '''
-#
-#         ''' Testing Some of my stuff IMPORTANT UNCOMMENT THIS PLZ
-#         colorVector = getColor(firedRay, objlst, lightlst, 5)
-#         plot(screen,zbuff,colorVector.direction,x,y,1)
-#         '''
+def drawPerspective(ang, useRad = False): #55 degrees is human
+    if not(useRad):
+        if not(ang < 180 and ang > 0):
+            print("Invalid view angle")
+            return
+        ang *= math.pi / 180
+    else:
+        if not(ang < math.pi and ang > 0):
+            print("Invalid view angle")
+            return
+    midX = XRES/2.
+    midY = YRES/2.
+    distAway = -1 * (midX / math.tan(ang / 2))
+    for x in range(XRES):
+        for y in range(YRES):
+            # print(test.isIntersect(z,[250,250,0]))
+            firedRay = Ray( Vector([midX, midY, distAway]), ( Vector([x, y, 0]) - Vector([250, 250, distAway]) ).normalize() )
+            # print(firedRay)
+            # print(test0.isIntersect(firedRay))
+            # for obj in objlst:
+            #     if obj.isIntersect(firedRay):
+            #         plot(screen,zbuff,color,x,y,1)
+            colorVector = getColor(firedRay, objlst, lightlst, 5)
+            plot(screen,zbuff,colorVector.direction,x,y,1)
+
+# drawNoPerspective()
+drawPerspective(55)
 scaleColors(screen, 0)
 print("%f Seconds Elapsed for Calculation" % (time.time() - startTime))
 display(screen)
