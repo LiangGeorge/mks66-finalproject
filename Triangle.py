@@ -17,6 +17,11 @@ class Triangle:
     def __str__(self):
         return 'Triangle[%s %s %s]' % (str(self.p0), str(self.p1), str(self.p2))
 
+    def applyMatrix(self, matrix):
+        self.p0.applyMatrix(matrix)
+        self.p1.applyMatrix(matrix)
+        self.p2.applyMatrix(matrix)
+
     def getNormal(self, blank = 1):
         if self.normal == None:
             temp = []

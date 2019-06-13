@@ -112,98 +112,18 @@ startTime = time.time()
 # print(firedRay)
 # print(refl)
 
-def setPixelColor(ystart, yend):
-    if yend > YRES:
-        yend = YRES
-    results = []
-    for x in range(XRES):
-        for y in range(ystart, yend):
-            firedRay = Ray( Vector([x, y, 0]), Vector([0, 0, 1]) )
-            colorVector = getColor(firedRay, objlst, lightlst, 5)
-            if colorVector.direction != [0,0,0]:
-                results.append([x, y, colorVector.direction])
-    return results
-
-def drawNoPerspective():
-    for x in range(XRES):
-        for y in range(YRES):
-            #print(test.isIntersect(z,[250,250,0]))
-            firedRay = Ray(Vector([x,y,0]),Vector([0,0,1]))
-            #print(test0.isIntersect(firedRay))
-            # for obj in objlst:
-            #     if obj.isIntersect(firedRay):
-            #         plot(screen,zbuff,color,x,y,1)
-            # colorVector = getColor(firedRay, objlst, lightlst, 5)
-            # plot(screen,zbuff,colorVector.direction,x,y,1)
-            #Multiprocessing method
-            dy = YRES // mp.cpu_count()
-            numChunks = mp.cpu_count()
-            # numChunks = 4
-            dy = dy + int( (YRES - (dy * mp.cpu_count())) // numChunks ) + 1
-            print([(chunk, chunk + dy) for chunk in range(0, YRES, dy)])
-            pool = mp.Pool(mp.cpu_count())
-            results = [pool.apply(setPixelColor, args = (chunk, chunk + dy)) for chunk in range(0, YRES, dy)]
-            pool.close()
-            # print(results)
-            print('Complete')
-            for i in results:
-                for j in i:
-                    plot(screen,zbuff,j[2],j[0],j[1],1)
-    #
-    #         ''' Triangle Test
-    #         if test0.isIntersect(firedRay):
-    #             #print("hit")
-    #             plot(screen,zbuff,color,x,y,1)
-    #         '''
-    #
-    #         ''' Testing Some of my stuff IMPORTANT UNCOMMENT THIS PLZ
-    #         colorVector = getColor(firedRay, objlst, lightlst, 5)
-    #         plot(screen,zbuff,colorVector.direction,x,y,1)
-    #         '''
-
-def setPixelColorPerspective(ystart, yend, midX, midY, distAway):
-    if yend > YRES:
-        yend = YRES
-    results = []
-    for x in range(XRES):
-        for y in range(ystart, yend):
-            firedRay = Ray( Vector([midX, midY, distAway]), ( Vector([x, y, 0]) - Vector([250, 250, distAway]) ).normalize() )
-            colorVector = getColor(firedRay, objlst, lightlst, 5)
-            results.append([x, y, colorVector.direction])
-    return results
-
-def drawPerspective(ang, useRad = False): #55 degrees is human
-    if not(useRad):
-        if not(ang < 180 and ang > 0):
-            print("Invalid view angle")
-            return
-        ang *= math.pi / 180
-    else:
-        if not(ang < math.pi and ang > 0):
-            print("Invalid view angle")
-            return
-    midX = XRES/2.
-    midY = YRES/2.
-    dy = YRES // mp.cpu_count()
-    numChunks = mp.cpu_count()
-    # numChunks = 4
-    dy = dy + int( (YRES - (dy * mp.cpu_count())) // numChunks ) + 1
-    distAway = -1 * (midX / math.tan(ang / 2))
-    # print([(chunk, chunk + dy, midX, midY, distAway) for chunk in range(0, YRES, dy)])
-    pool = mp.Pool(mp.cpu_count())
-    results = [pool.apply(setPixelColorPerspective, args = (chunk, chunk + dy, midX, midY, distAway)) for chunk in range(0, YRES, dy)]
-    pool.close()
-    # output = mp.Queue()
-    # processes = [mp.Process(target=setPixelColorPerspective, args = (chunk, chunk + dy, midX, midY, distAway)) for chunk in range(0, YRES, dy)]
-    # for p in processes:
-    #     p.start()
-    # for p in processes:
-    #     p.join()
-    # results = [output.get() for p in processes]
-    for i in results:
-        for j in i:
-            plot(screen,zbuff,j[2],j[0],j[1],1)
-
+# def setPixelColor(ystart, yend):
+#     if yend > YRES:
+#         yend = YRES
+#     results = []
+#     for x in range(XRES):
+#         for y in range(ystart, yend):
+#             firedRay = Ray( Vector([x, y, 0]), Vector([0, 0, 1]) )
+#             colorVector = getColor(firedRay, objlst, lightlst, 5)
+#             if colorVector.direction != [0,0,0]:
+#                 results.append([x, y, colorVector.direction])
+#     return results
+#
 # def drawNoPerspective():
 #     for x in range(XRES):
 #         for y in range(YRES):
@@ -213,8 +133,22 @@ def drawPerspective(ang, useRad = False): #55 degrees is human
 #             # for obj in objlst:
 #             #     if obj.isIntersect(firedRay):
 #             #         plot(screen,zbuff,color,x,y,1)
-#             colorVector = getColor(firedRay, objlst, lightlst, 5)
-#             plot(screen,zbuff,colorVector.direction,x,y,1)
+#             # colorVector = getColor(firedRay, objlst, lightlst, 5)
+#             # plot(screen,zbuff,colorVector.direction,x,y,1)
+#             #Multiprocessing method
+#             dy = YRES // mp.cpu_count()
+#             numChunks = mp.cpu_count()
+#             # numChunks = 4
+#             dy = dy + int( (YRES - (dy * mp.cpu_count())) // numChunks ) + 1
+#             print([(chunk, chunk + dy) for chunk in range(0, YRES, dy)])
+#             pool = mp.Pool(mp.cpu_count())
+#             results = [pool.apply(setPixelColor, args = (chunk, chunk + dy)) for chunk in range(0, YRES, dy)]
+#             pool.close()
+#             # print(results)
+#             print('Complete')
+#             for i in results:
+#                 for j in i:
+#                     plot(screen,zbuff,j[2],j[0],j[1],1)
 #     #
 #     #         ''' Triangle Test
 #     #         if test0.isIntersect(firedRay):
@@ -226,6 +160,17 @@ def drawPerspective(ang, useRad = False): #55 degrees is human
 #     #         colorVector = getColor(firedRay, objlst, lightlst, 5)
 #     #         plot(screen,zbuff,colorVector.direction,x,y,1)
 #     #         '''
+
+# def setPixelColorPerspective(ystart, yend, midX, midY, distAway):
+#     if yend > YRES:
+#         yend = YRES
+#     results = []
+#     for x in range(XRES):
+#         for y in range(ystart, yend):
+#             firedRay = Ray( Vector([midX, midY, distAway]), ( Vector([x, y, 0]) - Vector([250, 250, distAway]) ).normalize() )
+#             colorVector = getColor(firedRay, objlst, lightlst, 5)
+#             results.append([x, y, colorVector.direction])
+#     return results
 #
 # def drawPerspective(ang, useRad = False): #55 degrees is human
 #     if not(useRad):
@@ -239,24 +184,79 @@ def drawPerspective(ang, useRad = False): #55 degrees is human
 #             return
 #     midX = XRES/2.
 #     midY = YRES/2.
+#     dy = YRES // mp.cpu_count()
+#     numChunks = mp.cpu_count()
+#     # numChunks = 4
+#     dy = dy + int( (YRES - (dy * mp.cpu_count())) // numChunks ) + 1
 #     distAway = -1 * (midX / math.tan(ang / 2))
-#     for x in range(XRES):
-#         for y in range(YRES):
-#             # print(test.isIntersect(z,[250,250,0]))
-#             firedRay = Ray( Vector([midX, midY, distAway]), ( Vector([x, y, 0]) - Vector([250, 250, distAway]) ).normalize() )
-#             # print(firedRay)
-#             # print(test0.isIntersect(firedRay))
-#             # for obj in objlst:
-#             #     if obj.isIntersect(firedRay):
-#             #         plot(screen,zbuff,color,x,y,1)
-#             colorVector = getColor(firedRay, objlst, lightlst, 5)
-#             plot(screen,zbuff,colorVector.direction,x,y,1)
+#     # print([(chunk, chunk + dy, midX, midY, distAway) for chunk in range(0, YRES, dy)])
+#     pool = mp.Pool(mp.cpu_count())
+#     results = [pool.apply(setPixelColorPerspective, args = (chunk, chunk + dy, midX, midY, distAway)) for chunk in range(0, YRES, dy)]
+#     pool.close()
+#     # output = mp.Queue()
+#     # processes = [mp.Process(target=setPixelColorPerspective, args = (chunk, chunk + dy, midX, midY, distAway)) for chunk in range(0, YRES, dy)]
+#     # for p in processes:
+#     #     p.start()
+#     # for p in processes:
+#     #     p.join()
+#     # results = [output.get() for p in processes]
+#     for i in results:
+#         for j in i:
+#             plot(screen,zbuff,j[2],j[0],j[1],1)
 
-objlst = triangles
+def drawNoPerspective():
+    for x in range(XRES):
+        for y in range(YRES):
+            #print(test.isIntersect(z,[250,250,0]))
+            firedRay = Ray(Vector([x,y,0]),Vector([0,0,1]))
+            #print(test0.isIntersect(firedRay))
+            # for obj in objlst:
+            #     if obj.isIntersect(firedRay):
+            #         plot(screen,zbuff,color,x,y,1)
+            colorVector = getColor(firedRay, objlst, lightlst, 5)
+            plot(screen,zbuff,colorVector.direction,x,y,1)
+    #
+    #         ''' Triangle Test
+    #         if test0.isIntersect(firedRay):
+    #             #print("hit")
+    #             plot(screen,zbuff,color,x,y,1)
+    #         '''
+    #
+    #         ''' Testing Some of my stuff IMPORTANT UNCOMMENT THIS PLZ
+    #         colorVector = getColor(firedRay, objlst, lightlst, 5)
+    #         plot(screen,zbuff,colorVector.direction,x,y,1)
+    #         '''
+
+def drawPerspective(ang, useRad = False): #55 degrees is human
+    if not(useRad):
+        if not(ang < 180 and ang > 0):
+            print("Invalid view angle")
+            return
+        ang *= math.pi / 180
+    else:
+        if not(ang < math.pi and ang > 0):
+            print("Invalid view angle")
+            return
+    midX = XRES/2.
+    midY = YRES/2.
+    distAway = -1 * (midX / math.tan(ang / 2))
+    for x in range(XRES):
+        for y in range(YRES):
+            # print(test.isIntersect(z,[250,250,0]))
+            firedRay = Ray( Vector([midX, midY, distAway]), ( Vector([x, y, 0]) - Vector([250, 250, distAway]) ).normalize() )
+            # print(firedRay)
+            # print(test0.isIntersect(firedRay))
+            # for obj in objlst:
+            #     if obj.isIntersect(firedRay):
+            #         plot(screen,zbuff,color,x,y,1)
+            colorVector = getColor(firedRay, objlst, lightlst, 5)
+            plot(screen,zbuff,colorVector.direction,x,y,1)
+
+# objlst = triangles
 if __name__ == '__main__':
     mp.freeze_support()
-    # drawNoPerspective()
-    drawPerspective(55)
+    drawNoPerspective()
+    # drawPerspective(55)
     scaleColors(screen, 0)
     print("%f Seconds Elapsed for Calculation" % (time.time() - startTime))
     display(screen)

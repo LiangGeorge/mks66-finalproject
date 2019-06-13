@@ -13,6 +13,12 @@ class Sphere:
     def __str__(self):
         return 'Center: ' + str(self.o) + ' Radius: ' + str(self.r)
 
+    def applyMatrix(self, matrix):
+        rPoint = self.o + Vector([self.r, 0, 0])
+        self.o.applyMatrix(matrix)
+        rPoint.applyMatrix(matrix)
+        self.r = (rPoint - self.o).get_mag()
+
     def getReflected(self, ray, point):
         '''Returns the reflected ray of a ray that hits a given point on the sphere
         '''
@@ -25,7 +31,6 @@ class Sphere:
         p = normal * normal.dot(incoming)
         reflected = (p * 2) - incoming #Reflected direction vector
         return Ray(point, reflected )
-
 
     def getNormal(self, point):
         '''Assumes that the point vector is on the sphere
@@ -61,7 +66,6 @@ class Sphere:
         root = roots[0] if roots[0] < roots[1] and roots[0] > threshold else roots[1]
 
         return root
-
     '''
         print(avectoro.direction)
         diffo = avectoro - self.o

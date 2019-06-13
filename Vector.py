@@ -1,14 +1,21 @@
 import math
+from gmath import matrix_mult
 
 class Vector:
     def __init__(self, direction):
         self.direction = direction
+        if len(direction == 3):
+            direction.append(1)
 
     def get_direction(self):
         return self.direction
 
     def __add__(self,o):
         return
+
+    def applyMatrix(self, matrix):
+        matrix_mult(matrix, self.direction)
+        self.direction.pop()
 
     #Scaling our vector
     def scaleup(self,scalar):
