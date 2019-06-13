@@ -157,15 +157,6 @@ def run(filename):
                 #matrix_mult( stack[-1], tmp )
                 #draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp[-1].applyMatrix(stack[-1])
-                tmp[-2].applyMatrix(stack[-1])
-                tmp[-3].applyMatrix(stack[-1])
-                tmp[-4].applyMatrix(stack[-1])
-                tmp[-5].applyMatrix(stack[-1])
-                tmp[-6].applyMatrix(stack[-1])
-                tmp[-7].applyMatrix(stack[-1])
-                tmp[-8].applyMatrix(stack[-1])
-                tmp[-9].applyMatrix(stack[-1])
-                tmp = []
                 reflect = '.white'
 
             elif c == 'sphere':
@@ -218,6 +209,7 @@ def run(filename):
                     tmp = make_rotY(theta)
                 else:
                     tmp = make_rotZ(theta)
+
                 matrix_mult( stack[-1], tmp )
                 stack[-1] = [ x[:] for x in tmp]
                 tmp = []
