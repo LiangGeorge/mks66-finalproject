@@ -146,15 +146,17 @@ def run(filename):
                 draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
+
             elif c == 'sphere':
                 if command['constants']:
                     reflect = command['constants']
                 add_sphere(tmp,
                            args[0], args[1], args[2], args[3], step_3d)
                 matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
-                tmp = []
+                #draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                #tmp = []
                 reflect = '.white'
+
             elif c == 'torus':
                 if command['constants']:
                     reflect = command['constants']
@@ -199,6 +201,10 @@ def run(filename):
                 display(screen)
             elif c == 'save':
                 save_extension(screen, args[0])
+
+            #Comes at the end so that we can do ray tracing stuff
+            draw_polygons(tmp,screen,zbuffer,view,ambient,light,symbols,reflect)
+            
         if num_frames != 1:
             save_extension(screen, 'anim/' + name + maxDigits%frame)
             tmp = new_matrix()
