@@ -20,22 +20,29 @@ from draw import *
   ==================== """
 def first_pass( commands ):
 
+    collection = {}
     name = ''
     num_frames = 1
-
-    hasVary = False
-
-    for command in commands:
-        if command['op'] == 'frames':
-            num_frames = int(command['args'][0])
-        elif command['op'] == 'basename':
-            name = command['args'][0]
-        elif command['op'] == 'vary':
-            hasVary = True
-    if hasVary:
-        return (name, num_frames)
-    print('Vary found, but numFrames not')
-    exit()
+    i = 0
+    while i < len(commands):
+        if (commands[i]['op'] == 'frames') or (commands[i]['op'] == 'basename') or (commands[i]['op'] == 'vary'):
+            collection[commands[i]['op']] = commands[i]['args']
+            #print("Statement Reached")
+        i+= 1
+    #print(collection)
+    if ('frames' in collection) and ('basename' in collection):
+        num_frames = int(collection['frames'][0])
+        #print num_frames
+        name = collection['basename'][0]
+        #print name
+    elif ('vary' in collection) and not(('frames' in collection) and ('basename' in collection)):
+        print("Error: Frames not found")
+        exit()
+    elif ('frames' in collection):
+        name = 'animation'
+        print("The name being used is: animation")
+        num_frames = int(collection['frames'][0])
+    return(name, num_frames)
 
 """======== second_pass( commands ) ==========
 
@@ -110,8 +117,8 @@ def run(filename):
     (name, num_frames) = first_pass(commands)
     frames = second_pass(commands, num_frames)
 
-    for i in frames:
-        print i
+    #for i in frames:
+        #print i
 
     tmp = new_matrix()
     ident( tmp )
@@ -124,6 +131,11 @@ def run(filename):
     consts = ''
     coords = []
     coords1 = []
+    doDisplay = False
+    lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000])),
+                Light(Vector([250, 190, 100]), Vector([1190, 1580, 2030])),
+                Light(Vector([400, 400, 100]), Vector([25500, 10500, 9700])),
+                Light(Vector([750, -250, 100]), Vector([2550000, 2550000, 2550000]))]
 
     maxDigits = "%0" + str(int(math.log(num_frames)) + 1) + "d"
 
@@ -143,7 +155,7 @@ def run(filename):
                         args[0], args[1], args[2],
                         args[3], args[4], args[5])
                 matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                #draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
 
@@ -152,7 +164,9 @@ def run(filename):
                     reflect = command['constants']
                 add_sphere(tmp,
                            args[0], args[1], args[2], args[3], step_3d)
-                matrix_mult( stack[-1], tmp )
+                #print(type(tmp[len(tmp)-1].o))
+                #print(tmp[len(tmp)-1].o)
+                #matrix_mult( stack[-1], tmp[len(tmp)-1].o.direction)
                 #draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 #tmp = []
                 reflect = '.white'
@@ -163,7 +177,7 @@ def run(filename):
                 add_torus(tmp,
                           args[0], args[1], args[2], args[3], args[4], step_3d)
                 matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                #draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
             elif c == 'line':
@@ -198,13 +212,22 @@ def run(filename):
             elif c == 'pop':
                 stack.pop()
             elif c == 'display':
-                display(screen)
+                doDisplay = True
             elif c == 'save':
                 save_extension(screen, args[0])
 
             #Comes at the end so that we can do ray tracing stuff
-            draw_polygons(tmp,screen,zbuffer,view,ambient,light,symbols,reflect)
-            
+        print("Printing contents of tmp array in script: ")
+        # retrieve_polygons(tmp)
+        # print(tmp)
+        # draw_polygons(tmp,screen,zbuffer,view,ambient,light,symbols,reflect)
+        drawNoPerspective(screen,zbuffer, tmp, lightlst)
+        scaleColors(screen,0)
+        if doDisplay:
+            display(screen)
+        doDisplay = False
+
+
         if num_frames != 1:
             save_extension(screen, 'anim/' + name + maxDigits%frame)
             tmp = new_matrix()
