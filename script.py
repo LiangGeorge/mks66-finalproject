@@ -153,9 +153,18 @@ def run(filename):
                     reflect = command['constants']
                 add_box(tmp,
                         args[0], args[1], args[2],
-                        args[3], args[4], args[5])
-                matrix_mult( stack[-1], tmp )
+                        args[3], args[4], args[5], symbols[reflect])
+                #matrix_mult( stack[-1], tmp )
                 #draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                tmp[-1].applyMatrix(stack[-1])
+                tmp[-2].applyMatrix(stack[-1])
+                tmp[-3].applyMatrix(stack[-1])
+                tmp[-4].applyMatrix(stack[-1])
+                tmp[-5].applyMatrix(stack[-1])
+                tmp[-6].applyMatrix(stack[-1])
+                tmp[-7].applyMatrix(stack[-1])
+                tmp[-8].applyMatrix(stack[-1])
+                tmp[-9].applyMatrix(stack[-1])
                 tmp = []
                 reflect = '.white'
 
@@ -163,13 +172,16 @@ def run(filename):
                 if command['constants']:
                     reflect = command['constants']
                 add_sphere(tmp,
-                           args[0], args[1], args[2], args[3], step_3d)
+                           args[0], args[1], args[2], args[3], symbols[reflect])
                 tmp[-1].applyMatrix(stack[-1])
-                #print(type(tmp[len(tmp)-1].o))
-                #print(tmp[len(tmp)-1].o)
-                #matrix_mult( stack[-1], tmp[len(tmp)-1].o.direction)
-                #draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
-                #tmp = []
+                reflect = '.white'
+
+            elif c == 'triangle':
+                if command['constants']:
+                    reflect = command['constants']
+                print(args)
+                add_triangle(tmp,args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8],symbols[reflect])
+                tmp[-1].applyMatrix(stack[-1])
                 reflect = '.white'
 
             elif c == 'torus':
@@ -193,10 +205,11 @@ def run(filename):
                 stack[-1] = [x[:] for x in tmp]
                 tmp = []
             elif c == 'scale':
-                tmp = make_scale(args[0] * knob_value, args[1] * knob_value, args[2] * knob_value)
-                matrix_mult(stack[-1], tmp)
-                stack[-1] = [x[:] for x in tmp]
-                tmp = []
+                # tmp = make_scale(args[0] * knob_value, args[1] * knob_value, args[2] * knob_value)
+                # matrix_mult(stack[-1], tmp)
+                # stack[-1] = [x[:] for x in tmp]
+                # tmp = []
+                pass
             elif c == 'rotate':
                 theta = args[1] * (math.pi/180) * knob_value
                 if args[0] == 'x':
