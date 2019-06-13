@@ -37,6 +37,8 @@ class Light:
         p = normal * normal.dot(incoming)
         reflected = (p * 2) - incoming #Reflected direction vector
         specular = (intensity * ( (reflected.dot(viewVector)) ** SPECULAR_EXP )).multComponents(specCons)
+        # print(incoming)
+        # print(reflected)
 
         # Diffuse ---------------------
         diffCons = Vector([red[1], green[1], blue[1]])

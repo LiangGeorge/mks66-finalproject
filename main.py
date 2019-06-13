@@ -25,16 +25,21 @@ def getColor(ray, objlst, lightlst, numBounces):
     reflectedRay = closestObj.getReflected(ray, intersectPoint)
     #Make successive bounces less important based on spectral constants
     colorDecay = Vector([closestObj.cons[1]['red'][2], closestObj.cons[1]['green'][2], closestObj.cons[1]['blue'][2]])
+    normal = closestObj.getNormal(intersectPoint)
+    if normal.dot(reflectedRay.d) < 0:
+        normal *= -1
     for light in lightlst:
         rayToLight = Ray(intersectPoint, (light.pos - intersectPoint))
+        if normal.dot(rayToLight.d) < 0:
+            continue
         distToLight = rayToLight.d.get_mag()
+        rayToLight.d.normalize()
         for obj in objlst: #Check for object hit
             dist = obj.isIntersect(rayToLight)
             if dist != None and dist < distToLight:
                 break
         else: #Executed if objects are exhausted without break
             #Phong model
-            normal = closestObj.getNormal(intersectPoint)
             hitColor += light.calculateColor(distToLight, rayToLight, normal, ray.d, closestObj.cons)
         continue
     return (hitColor + getColor(reflectedRay, objlst, lightlst, numBounces - 1).multComponents(colorDecay))
@@ -83,18 +88,28 @@ lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000])),
 test0 = Triangle(Vector([100,300,100]),Vector([200,300,100]),Vector([150,450,100]))
 temp = []
 #add_torus(temp,250,250,100,25,150,50)
-# add_box(temp,100,350,100,100,100,100)
-# tmp = new_matrix()
-# ident(tmp)
-# matrix_mult(make_rotX(30),tmp)
-# matrix_mult(make_rotY(-20), tmp)
-# matrix_mult(tmp,temp)
+add_box(temp,100,350,100,100,100,100)
+tmp = new_matrix()
+ident(tmp)
+matrix_mult(make_rotX(30),tmp)
+matrix_mult(make_rotY(-20), tmp)
+matrix_mult(tmp,temp)
 
 triangles = []
-for x in range(len(temp) - 2):
-    triangles.append(Triangle(Vector(temp[x]),Vector(temp[x + 1]),Vector(temp[x + 2])))
+for x in range(0,len(temp) - 2,3):
+    triangles.append(Triangle(Vector(temp[x][:3]),Vector(temp[x + 1][:3]),Vector(temp[x + 2][:3])))
+
+# triangles.append(Triangle( Vector([300, 200, 100]), Vector([250, 300, 100]), Vector([200, 200, 100]) ))
 
 startTime = time.time()
+
+# firedRay = Ray(Vector([250,250,0]), Vector([0,0,1]))
+# t = triangles[0].isIntersect(firedRay)
+# print(t)
+# refl = triangles[0].getReflected(firedRay, firedRay.pointAtT(t))
+# print(firedRay)
+# print(refl)
+
 for x in range(XRES):
     for y in range(YRES):
         #print(test.isIntersect(z,[250,250,0]))
@@ -103,19 +118,19 @@ for x in range(XRES):
         # for obj in objlst:
         #     if obj.isIntersect(firedRay):
         #         plot(screen,zbuff,color,x,y,1)
-        colorVector = getColor(firedRay, objlst, lightlst, 5)
+        colorVector = getColor(firedRay, triangles, lightlst, 5)
         plot(screen,zbuff,colorVector.direction,x,y,1)
-
-        ''' Triangle Test
-        if test0.isIntersect(firedRay):
-            #print("hit")
-            plot(screen,zbuff,color,x,y,1)
-        '''
-
-        ''' Testing Some of my stuff IMPORTANT UNCOMMENT THIS PLZ
-        colorVector = getColor(firedRay, objlst, lightlst, 5)
-        plot(screen,zbuff,colorVector.direction,x,y,1)
-        '''
+#
+#         ''' Triangle Test
+#         if test0.isIntersect(firedRay):
+#             #print("hit")
+#             plot(screen,zbuff,color,x,y,1)
+#         '''
+#
+#         ''' Testing Some of my stuff IMPORTANT UNCOMMENT THIS PLZ
+#         colorVector = getColor(firedRay, objlst, lightlst, 5)
+#         plot(screen,zbuff,colorVector.direction,x,y,1)
+#         '''
 scaleColors(screen, 0)
 print("%f Seconds Elapsed for Calculation" % (time.time() - startTime))
 display(screen)
