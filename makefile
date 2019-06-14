@@ -1,4 +1,7 @@
-test: test.mdl lex.py main.py matrix.py mdl.py display.py draw.py gmath.py yacc.py
+still: still.mdl lex.py main.py matrix.py mdl.py display.py draw.py gmath.py yacc.py
+	python main.py still.mdl
+
+anim:
 	python main.py test.mdl
 
 hall:
