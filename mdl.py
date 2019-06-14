@@ -39,7 +39,8 @@ tokens = (
     "SCREEN",
     "WEB",
     "CO",
-    "TRIANGLE"
+    "TRIANGLE",
+    "PERSPECTIVE"
 )
 
 reserved = {
@@ -81,7 +82,8 @@ reserved = {
     "focal" : "FOCAL",
     "display" : "DISPLAY",
     "web" : "WEB",
-    'triangle' : 'TRIANGLE'
+    'triangle' : 'TRIANGLE',
+    'perspective' : 'PERSPECTIVE'
 }
 
 t_ignore = " \t"
@@ -142,6 +144,21 @@ def p_TEXT(p):
 def p_NUMBER(p):
     """NUMBER : DOUBLE"""
     p[0] = p[1]
+
+def p_command_light(p):
+    """command : LIGHT NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER"""
+    cmd = {'op' : p[1], 'constants' : None, 'cs' : None, 'args':[]}
+    arg_start = 2
+    cmd['args'] = p[arg_start: arg_start + 6]
+    commands.append(cmd)
+
+def p_command_perspective(p):
+    """command : PERSPECTIVE NUMBER
+               | PERSPECTIVE"""
+    cmd = {'op' : p[1], 'args' : []}
+    if len(p) >= 3:
+        cmd['args'].append(p[2])
+    commands.append(cmd)
 
 def p_command_triangle(p):
     """command : TRIANGLE NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
@@ -329,11 +346,11 @@ def p_command_constants(p):
     cmd = {'op':p[1], 'args' : None, 'constants' : p[2] }
     commands.append(cmd)
 
-def p_command_light(p):
-    "command : LIGHT SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER"
-    symbols[p[2]] = ['light', {'location' : p[3:6], 'color' : p[6:]}]
-    cmd = {'op':p[1], 'args' : None, 'light' : p[2] }
-    commands.append(cmd)
+# def p_command_light(p):
+#     "command : LIGHT SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER"
+#     symbols[p[2]] = ['light', {'location' : p[3:6], 'color' : p[6:]}]
+#     cmd = {'op':p[1], 'args' : None, 'light' : p[2] }
+#     commands.append(cmd)
 
 def p_command_shading(p):
     "command : SHADING SHADING_TYPE"

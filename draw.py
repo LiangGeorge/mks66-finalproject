@@ -338,36 +338,37 @@ def drawPerspective(screen, zbuff, ang, objlst, lightlst, useRad = False): #55 d
     # objlst = triangles
 
 
-
+def add_light( lights, x, y, z, red, green, blue):
+    lights.append( Light( Vector([x, y, z]) , Vector([red, green, blue]) ) )
 
 def add_box( polygons, x, y, z, width, height, depth,cons):
-    polygons.append(Box([x,y,z],width,height,depth,cons))
-    # x1 = x + width
-    # y1 = y - height
-    # z1 = z - depth
-    # # print(x)
-    # # print(y)
-    # # print(z)
-    # #Front face
-    #
-    # add_triangle(polygons, x, y, z, x1, y1, z, x1, y, z,cons)
-    # add_triangle(polygons, x, y, z, x, y1, z, x1, y1, z,cons)
-    # #Back Face
-    # add_triangle(polygons, x1, y, z1, x, y1, z1, x, y, z1,cons)
-    # add_triangle(polygons, x1, y, z1, x1, y1, z1, x, y1, z1,cons)
-    # #Left
-    # add_triangle(polygons, x, y, z1, x, y1, z, x, y, z,cons)
-    # add_triangle(polygons, x, y, z1, x, y1, z1, x, y1, z,cons)
-    # #Right
-    # add_triangle(polygons, x1, y, z, x1, y1, z1, x1, y, z1,cons)
-    # add_triangle(polygons, x1, y, z, x1, y1, z, x1, y1, z1,cons)
-    # #Top
-    # add_triangle(polygons, x, y, z1, x1, y, z, x1, y, z1,cons)
-    # add_triangle(polygons, x, y, z1, x, y, z, x1, y, z,cons)
-    # #Bottom
-    # add_triangle(polygons, x, y1, z, x1, y1, z1, x1, y1, z,cons)
-    # add_triangle(polygons, x, y1, z, x, y1, z1, x1, y1, z1,cons)
+    # polygons.append(Box([x,y,z],width,height,depth,cons))
+    x1 = x + width
+    y1 = y - height
+    z1 = z - depth
+    # print(x)
+    # print(y)
+    # print(z)
+    #Front face
 
+    add_triangle(polygons, x, y, z, x1, y1, z, x1, y, z,cons)
+    add_triangle(polygons, x, y, z, x, y1, z, x1, y1, z,cons)
+    #Back Face
+    add_triangle(polygons, x1, y, z1, x, y1, z1, x, y, z1,cons)
+    add_triangle(polygons, x1, y, z1, x1, y1, z1, x, y1, z1,cons)
+    #Left
+    add_triangle(polygons, x, y, z1, x, y1, z, x, y, z,cons)
+    add_triangle(polygons, x, y, z1, x, y1, z1, x, y1, z,cons)
+    #Right
+    add_triangle(polygons, x1, y, z, x1, y1, z1, x1, y, z1,cons)
+    add_triangle(polygons, x1, y, z, x1, y1, z, x1, y1, z1,cons)
+    #Top
+    add_triangle(polygons, x, y, z1, x1, y, z, x1, y, z1,cons)
+    add_triangle(polygons, x, y, z1, x, y, z, x1, y, z,cons)
+    #Bottom
+    add_triangle(polygons, x, y1, z, x1, y1, z1, x1, y1, z,cons)
+    add_triangle(polygons, x, y1, z, x, y1, z1, x1, y1, z1,cons)
+    #
     # x1 = x + width
     # y1 = y - height
     # z1 = z - depth

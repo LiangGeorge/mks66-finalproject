@@ -12,11 +12,17 @@ class Light:
         self.pos = position
         self.color = color
 
+    def __str__(self):
+        return 'Light[%s %s]' % (str(self.pos),(str(self.color)))
+
     def colorAtDist(self, dist):
         #Intensity = color / dist^2
         if dist < 1:
             return self.color
         return self.color * (dist ** -2)
+
+    def applyMatrix(self, matrix):
+        self.pos.applyMatrix(matrix)
 
     def calculateColor(self, dist, rayToLight, normal, viewVector, constants):
         '''Returns the color of a given point

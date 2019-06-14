@@ -126,16 +126,16 @@ def run(filename):
     stack = [ [x[:] for x in tmp] ]
     screen = new_screen()
     zbuffer = new_zbuffer()
+    objects = []
     tmp = []
     step_3d = 100
     consts = ''
     coords = []
     coords1 = []
-    doDisplay = False
-    lightlst = [Light(Vector([-500, 250, 0]), Vector([1770000, 1560000, 2170000])),
-                Light(Vector([250, 190, 100]), Vector([1190, 1580, 2030])),
-                Light(Vector([400, 400, 100]), Vector([25500, 10500, 9700])),
-                Light(Vector([750, -250, 100]), Vector([2550000, 2550000, 2550000]))]
+    recalcScreen = True
+    perspective = False
+    lightlst = []
+    viewAng = 55
 
     maxDigits = "%0" + str(int(math.log(num_frames)) + 1) + "d"
 
@@ -145,45 +145,48 @@ def run(filename):
             c = command['op']
             args = command['args']
             knob_value = 1
+
             if 'knob' in command and command['knob'] != None and command['knob'] in frames[frame]:
                 knob_value = frames[frame][command['knob']]
 
             if c == 'box':
                 if command['constants']:
                     reflect = command['constants']
-                add_box(tmp,
+                add_box(objects,
                         args[0], args[1], args[2],
                         args[3], args[4], args[5], symbols[reflect])
                 #matrix_mult( stack[-1], tmp )
                 #draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
-                tmp[-1].applyMatrix(stack[-1])
+                for i in range(-12,0):
+                    objects[i].applyMatrix(stack[-1])
                 reflect = '.white'
 
             elif c == 'sphere':
                 if command['constants']:
                     reflect = command['constants']
-                add_sphere(tmp,
+                add_sphere(objects,
                            args[0], args[1], args[2], args[3], symbols[reflect])
-                tmp[-1].applyMatrix(stack[-1])
+                objects[-1].applyMatrix(stack[-1])
                 reflect = '.white'
 
             elif c == 'triangle':
                 if command['constants']:
                     reflect = command['constants']
                 print(args)
-                add_triangle(tmp,args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8],symbols[reflect])
-                tmp[-1].applyMatrix(stack[-1])
+                add_triangle(objects,args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8],symbols[reflect])
+                objects[-1].applyMatrix(stack[-1])
                 reflect = '.white'
 
             elif c == 'torus':
-                if command['constants']:
-                    reflect = command['constants']
-                add_torus(tmp,
-                          args[0], args[1], args[2], args[3], args[4], step_3d)
-                matrix_mult( stack[-1], tmp )
-                #draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
-                tmp = []
-                reflect = '.white'
+                # if command['constants']:
+                #     reflect = command['constants']
+                # add_torus(tmp,
+                #           args[0], args[1], args[2], args[3], args[4], step_3d)
+                # matrix_mult( stack[-1], tmp )
+                # #draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                # tmp = []
+                # reflect = '.white'
+                pass
             elif c == 'line':
                 add_edge(tmp,
                          args[0], args[1], args[2], args[3], args[4], args[5])
@@ -218,23 +221,53 @@ def run(filename):
             elif c == 'pop':
                 stack.pop()
             elif c == 'display':
-                doDisplay = True
+                if recalcScreen:
+                    if perspective:
+                        drawPerspective(screen, zbuffer, viewAng, objects, lightlst)
+                    else:
+                        drawNoPerspective(screen, zbuffer, objects, lightlst)
+                    scaleColors(screen,0)
+                display(screen)
             elif c == 'save':
+                if recalcScreen:
+                    if perspective:
+                        drawPerspective(screen, zbuffer, viewAng, objects, lightlst)
+                    else:
+                        drawNoPerspective(screen, zbuffer, objects, lightlst)
+                    scaleColors(screen,0)
                 save_extension(screen, args[0])
+            elif c == 'light':
+                add_light(lightlst,
+                        args[0], args[1], args[2],
+                        args[3], args[4], args[5])
+                lightlst[-1].applyMatrix(stack[-1])
+                print(lightlst[-1])
+            elif c == 'perspective':
+                perspective = not(perspective)
+                if len(args) >= 2:
+                    viewAng = args[1]
+
+            if c != 'display' and c != 'save':
+                recalcScreen = True
+            else:
+                recalcScreen = False
 
             #Comes at the end so that we can do ray tracing stuff
-        print("Printing contents of tmp array in script: ")
+        # print("Printing contents of object array in script: ")
+        # for obj in objects:
+        #     print(obj)
         # retrieve_polygons(tmp)
         # print(tmp)
         # draw_polygons(tmp,screen,zbuffer,view,ambient,light,symbols,reflect)
-        drawNoPerspective(screen,zbuffer, tmp, lightlst)
-        scaleColors(screen,0)
-        if doDisplay:
-            display(screen)
-        doDisplay = False
 
 
         if num_frames != 1:
+            if recalcScreen:
+                if perspective:
+                    drawPerspective(screen, zbuffer, viewAng, objects, lightlst)
+                else:
+                    drawNoPerspective(screen, zbuffer, objects, lightlst)
+                scaleColors(screen,0)
             save_extension(screen, 'anim/' + name + maxDigits%frame)
             tmp = new_matrix()
             ident( tmp )
@@ -242,6 +275,11 @@ def run(filename):
             screen = new_screen()
             zbuffer = new_zbuffer()
             tmp = []
+            objects = []
+            lightlst = []
+            recalcScreen = True
+            viewAng = 55
+            perspective = False
         # end operation loop
     if num_frames != 1:
         make_animation(name)

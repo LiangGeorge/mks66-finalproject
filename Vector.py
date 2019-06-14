@@ -47,7 +47,7 @@ class Vector:
         return Vector([self.direction[0] - o.direction[0],self.direction[1] - o.direction[1],self.direction[2] - o.direction[2]])
 
     def __str__(self):
-        return '<' + ','.join(str(x) for x in self.direction) + '>'
+        return '<' + ','.join(str(x) for x in self.direction[:3]) + '>'
 
     def get_mag(self):
         return math.sqrt( self.direction[0] * self.direction[0] +
