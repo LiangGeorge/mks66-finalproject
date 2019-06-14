@@ -1,0 +1,19 @@
+frames 1
+basename test_image
+perspective
+push
+move 250 250 0
+light 0 200 0 25500 25500 25500
+light 173.205 -100 0 25500 25500 25500
+light -173.205 -100 0 25500 25500 25500
+push
+constants mirror 0 0 .99 0 0 .99 0 0 .99
+constants frame 0 0.65098039215 0 0 0.50196078431 0 0 0.39215686274 0
+triangle mirror 0 200 100 173.205 -100 100 -173.205 -100 100
+triangle frame 0 210 101 -181.865 -105 101 181.865 -105 101
+
+triangle mirror 0 200 -1000 173.205 -100 -1000 -173.205 -100 -1000
+triangle frame 0 210 -1001 -181.865 -105 -1001 181.865 -105 -1001
+
+display
+save pic

@@ -192,7 +192,7 @@ def p_command_screen(p):
         commands.append({'op' : p[1], 'width' : p[2], 'height': p[3]})
 
 def p_command_save(p):
-    """command : SAVE TEXT TEXT"""
+    """command : SAVE TEXT"""
     commands.append({'op' : p[1], 'args' : [p[2]]})
 
 def p_command_show(p):
