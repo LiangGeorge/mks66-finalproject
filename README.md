@@ -1,3 +1,4 @@
+# Stuyvesant High School Computer Graphics Final Project (forked from school account)
 # mks66-finalproject
 # George Liang, Kevin Lin
 # Team Blink 183
